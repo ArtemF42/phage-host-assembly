@@ -37,6 +37,47 @@ All pipelines require the samples argument. It can be provided in one of two for
 - [fastp](https://github.com/OpenGene/fastp)
 - [MultiQC](https://github.com/MultiQC/MultiQC)
 
+### Working Directory Layout
+The pipeline expects the working directory to have the following structure:
+
+```
+working-directory/
+└── raw-reads/
+    ├── sample_1_R1.fq.gz
+    ├── sample_1_R2.fq.gz
+    ...
+    ├── sample_N_R1.fq.gz
+    └── sample_N_R2.fq.gz
+```
+
+Paired-end reads must be named as `sample_R1.fq.gz` and `sample_R2.fq.gz` and placed in the `raw-reads/` directory.
+
+### Running the Pipeline
+```bash
+snakemake --snakefile ./pipelines/quality_control.smk \
+    --directory /PATH/TO/WORKING/DIRECTORY \
+    --config samples=/PATH/TO/SAMPLE/FILE
+```
+
+### Output
+After the pipeline finishes, the following structure will be created:
+
+```
+working-directory/
+├── raw-reads/
+├── sample_1/
+│   └── reads/
+│       ├── sample_1_R1.fq.gz
+│       └── sample_1_R2.fq.gz
+...
+├── sample_N/
+│   └── reads/
+│       ├── sample_N_R1.fq.gz
+│       └── sample_N_R2.fq.gz
+├── multiqc_report.html
+└── multiqc_results/
+```
+
 ## Taxonomic Classification
 Sometimes sequencing reads may be contaminated with foreign DNA. This pipeline is designed to identify and remove non-target reads.
 
@@ -67,7 +108,7 @@ working-directory/
 # Classify reads
 snakemake --snakefile ./pipelines/taxonomic_classification.smk \
     --directory /PATH/TO/WORKING/DIRECTORY \
-    --config samples=SAMPLE1,SAMPLE2,...
+    --config samples=/PATH/TO/SAMPLE/FILE
 ```
 
 ### Output
@@ -84,6 +125,7 @@ working-directory/
 ```
 
 ## Phage Assembly
+This pipeline is a modified version of the one described in the paper ["Phage Genome Annotation: Where to Begin and End"](https://doi.org/10.1089/phage.2021.0015).
 
 ### Requirements
 - [seqtk](https://github.com/lh3/seqtk)
@@ -91,24 +133,19 @@ working-directory/
 - [Bandage](https://github.com/rrwick/Bandage) (optional)
 - [CheckV](https://bitbucket.org/berkeleylab/CheckV)
 
-You should also set the following environment variables:
+You should also download the CheckV database and set the corresponding environment variable by running:
 
 ```bash
+checkv download_database /PATH/TO/CHECKV/DATABASE
 export CHECKVDB=/PATH/TO/CHECKV/DATABASE
 ```
 
-### Run pipeline
+### Running the Pipeline
 ```bash
-# Quality Control
-snakemake --snakefile ./pipelines/phage_assembly.smk qc \
-    --config src-dir=/PATH/TO/SRC/DIR dst-dir=  
-
 # Genome Assembly
-snakemake --snakefile ./pipelines/phage_assembly.smk assembly \
-    --config ...
-
-# Annotation
-...
+snakemake --snakefile ./pipelines/phage_assembly.smk assemble \
+    --directory /PATH/TO/WORKING/DIRECTORY \
+    --config sample=/PATH/TO/SAMPLE/FILE
 ```
 
 ## Bacterial Assembly
