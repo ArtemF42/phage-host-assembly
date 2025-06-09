@@ -10,7 +10,7 @@ For details, see the following sections
 ### Important Notes
 Snakemake allows you to use software from [Conda](https://www.anaconda.com/) environments. To enable this, specify the `conda` field in your `.smk` file, for example:
 
-```snakemake
+```
 rule <RULE_NAME>:
     conda:
         <ENV_NAME>
@@ -22,13 +22,20 @@ Also, make sure to add the `--use-conda` flag when running the pipeline:
 snakemake ... --use-conda
 ```
 
-All pipelines require the samples argument. It can be provided in one of two formats:
+All pipelines require the `samples` argument. It can be provided in one of two formats:
 
 ```bash
---config samples=sample1,sample2,sample3
+# Specify a comma-separated list of sample names
+snakemake ... --config samples=sample1,sample2,sample3
 
-# Alternatively, provide a path to a text file where each line is a sample name
---config ...
+# Alternatively, provide the path to a text file with one sample name per line
+snakemake ... --config samples=/PATH/TO/SAMPLE/FILE
+```
+
+Use the `threads` option to set the number of threads
+
+```bash
+snakemake ... --config threads=NUM_THREADS
 ```
 
 ## Quality Control
