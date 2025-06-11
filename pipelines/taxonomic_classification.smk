@@ -25,7 +25,7 @@ rule kraken2:
         report = os.path.join(cwd, '{sample}', 'taxonomy', '{sample}.kraken2.report'),
     shell:
         'kraken2 --db {params.db} --threads {threads} --output {output.output} --report {output.report} '
-        '--gzip-compressed --paired {input.r1} {input.r2}'
+        '--memory-mapping --gzip-compressed --paired {input.r1} {input.r2}'
 
 rule krona:
     input:
