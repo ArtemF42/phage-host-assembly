@@ -113,18 +113,18 @@ working-directory/
 ### Running the Pipeline
 ```bash
 # Classify reads
-snakemake --snakefile ./pipelines/taxonomic_classification.smk \
+snakemake --snakefile ./pipelines/taxonomic_classification.smk classify \
     --directory /PATH/TO/WORKING/DIRECTORY \
     --config samples=/PATH/TO/SAMPLE/FILE
 
 # Filter out reads assigned to the specified taxid (including child taxa)
-snakemake --snakefile ./pipelines/taxonomic_classification.smk \
+snakemake --snakefile ./pipelines/taxonomic_classification.smk filter \
     --directory /PATH/TO/WORKING/DIRECTORY \
     --config samples=/PATH/TO/SAMPLE/FILE taxid=TAXID
 ```
 
 ### Output
-After the pipeline runs, a new `taxonomy/` subdirectory will be created inside each sample directory, containing the following files:
+After the `classify` pipeline runs, a new `taxonomy/` subdirectory will be created inside each sample directory, containing the following files:
 
 ```
 working-directory/
@@ -134,6 +134,16 @@ working-directory/
         ├── sample.kraken2.output
         ├── sample.kraken2.report
         └── sample.krona.html
+```
+
+If the `filter` pipeline is also executed, the `reads/` subdirectory will include:
+
+```
+working-directory/
+└── sample/
+    └── reads/
+        ├── sample_filtered_R1.fq.gz
+        └── sample_filtered_R2.fq.gz
 ```
 
 ## Phage Assembly
