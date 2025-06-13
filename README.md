@@ -116,6 +116,11 @@ working-directory/
 snakemake --snakefile ./pipelines/taxonomic_classification.smk \
     --directory /PATH/TO/WORKING/DIRECTORY \
     --config samples=/PATH/TO/SAMPLE/FILE
+
+# Filter out reads assigned to the specified taxid (including child taxa)
+snakemake --snakefile ./pipelines/taxonomic_classification.smk \
+    --directory /PATH/TO/WORKING/DIRECTORY \
+    --config samples=/PATH/TO/SAMPLE/FILE taxid=TAXID
 ```
 
 ### Output
